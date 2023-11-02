@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.Exercice3.Models.Student;
 import com.example.Exercice3.Service.StudentService;
@@ -21,15 +22,20 @@ public class StudentsController {
     public StudentsController(StudentService studentService){
         this.studentService = studentService;
     }
-    
+
     @GetMapping
+    public String home(){
+        return "home";
+    }
+    
+    @GetMapping("/StudentList")
     public String getAllStudents(Model model){
         List<Student> studentList = studentService.getAllStudents();
         model.addAttribute("studentList", studentList);
         return "studentList";
     }
 
-    @GetMapping("/new")
+    @GetMapping("/addStudent")
     public String createStudentView(Model model){
          Student student = new Student();
         model.addAttribute("studentSubmit", student);
@@ -39,7 +45,7 @@ public class StudentsController {
     @PostMapping("/submitStudent")
     public String createStudent(@ModelAttribute("studentSubmit")Student student){
         studentService.createStudent(student);
-        return "redirect:/";
+        return "redirect:/StudentList";
     }
 
     @GetMapping("/{id}")
@@ -49,32 +55,32 @@ public class StudentsController {
         if (student != null) {
             return "studentById";   
         }
-            return "redirect:/new";
+            return "redirect:/addStudent";
     }
 
-    @GetMapping("/edit/{id}")
-    public String updateStudentView(Model model, @PathVariable Long id){
+    @GetMapping("/updateStudent")
+    public String updateStudentView(Model model, @RequestParam Long id){
         Student student = studentService.getStudentById(id);
         model.addAttribute("student", student );
         if (student != null) {
-            return "updateStudent";   
+            return "update";   
         }
-            return "redirect:/new";
+            return "redirect:/addStudent";
     }
 
-    @PostMapping("/updateStudent")
+    @PostMapping("/update")
     public String updateStudent(@ModelAttribute("studentSubmit")Student student){
         System.out.println(student);
         studentService.updateStudent(student.getId(), student);        
         return "redirect:/";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteStudent(@PathVariable Long id){
+    @GetMapping("/deleteStudent")
+    public String deleteStudent(@RequestParam Long id){
         Student student = studentService.getStudentById(id);
         if (student != null) {
            studentService.deleteStudent(id);
         }
-        return "redirect:/";
+        return "redirect:/StudentList";
     }
 }

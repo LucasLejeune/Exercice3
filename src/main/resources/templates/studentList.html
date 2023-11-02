@@ -7,19 +7,21 @@
 </head>
 <body>
 <main>
+    <span th:replace="~{navbar :: navbar}"></span>
     <h1>Liste des étudiants</h1>
     <hr>
     <table class="table">
         <thead>
-            <th>Nom</th>
-            <th>Prenom</th>
-            <th>Age</th>
+            <th scope="col">Nom</th>
+            <th scope="col">Prenom</th>
+            <th scope="col">Age</th>
         </thead>
         <tbody>
             <tr th:each="p : ${studentList}">
-                <td><span th:text="${p.firstName}"></span></td>
-                <td><span th:text="${p.lastName}"></span></td>
-                <td><span th:text="${p.age}"></span></td>
+                <td scope="row"><span th:text="${p.firstName}"></span></td>
+                <td scope="row"><span th:text="${p.lastName}"></span></td>
+                <td scope="row"><span th:text="${p.age}"></span></td>
+                <td scope="row"><a th:href="@{/updateStudent(id=${p.id})}">Modifier</a>&emsp;<a th:href="@{/deleteStudent(id=${p.id})}">Supprimer</a></td>
             </tr>
         </tbody>
     </table>
